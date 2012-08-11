@@ -1,0 +1,104 @@
+<!-- INCLUDE simple_header.html -->
+
+<script language="JavaScript">
+<!--
+	self.focus();
+
+	self.focus();
+	self.opener.location.reload();
+
+	function textCounter( field, countfield, maxlimit ) {
+	  if ( field.value.length > maxlimit )
+	  {
+		field.value = field.value.substring( 0, maxlimit );
+		alert( 'Textarea value can only be 255 characters in length.' );
+		return false;
+	  }
+	  else
+	  {
+		countfield.value = maxlimit - field.value.length;
+	  }
+	}
+
+
+
+
+	function bDel(id,id_com) {
+		document.location.href='blog_comments.php?perform=del&id=' + id + '&id_com=' + id_com;
+	}
+
+// -->
+</script>
+
+
+<div id="left_row" class="navbar">
+<span class="corners-top"><span></span></span>
+<form enctype="multipart/form-data" action="{U_FORM_ACTION}" method="POST" name="post">
+
+<table width="100%" cellpadding="4" cellspacing="1" border="0" >
+<tr>
+	<th class="thHead">{L_COMMENTS}</th>
+</tr>
+
+<!-- BEGIN blog_comments -->
+<tr>
+	<td class="{blog_comments.ROW_CLASS}">
+		<span class="genmed">
+		<b>{blog_comments.USERNAME}: {blog_comments.TIME}, {blog_comments.DATE}</b> {blog_comments.U_ADMIN_COMMAND}<br />
+		{blog_comments.COMMENT}
+		</span>
+	</td>
+</tr>
+<!-- END blog_comments -->
+
+<tr>
+	<td height="1" class="spaceRow"><img src="../templates/subSilver/images/spacer.gif" alt="" width="1" height="1" /></td>
+</tr>
+
+<tr>
+	<td class="row3">
+	<span class="genmed">
+  {L_USER_NAME}:<br />
+  <input type="text" class="post" name="username" size="30" maxlength="6" value="" />
+  <br />{L_E-MAIL}:<br />
+  <input type="text" class="post" name="usermail" size="30" maxlength="6" value="" />
+<!-- BEGIN switch_confirm -->
+                     <br />
+                     {L_CONFIRM_CODE}:*<br />
+                     <input type="text" class="post" name="confirm_code" size="30" maxlength="6" value="" />
+<!-- END switch_confirm -->
+	<br /><b>{L_COMMENT}:</b><br />
+	<textarea name="comments" rows="5" cols="30" onkeypress="textCounter(this,this.form.counter,255);" onblur="textCounter(this,this.form.counter,255);" onchange="textCounter(this,this.form.counter,255);" onfocus="textCounter(this,this.form.counter,255);" onkeydown="textCounter(this,this.form.counter,255);" onkeyup="textCounter(this,this.form.counter,255);"></textarea><br />
+	<input type="text" name="counter" maxlength="3" size="3" value="255" > {L_CHARACTERS_REMAINING}
+	</span>
+	</td>
+</tr>
+<!-- BEGIN switch_confirm -->
+            <tr>
+                     <td class="row1" width="100%">
+
+                     <table border="0" width="100%" cellpadding="2" cellspacing="0">
+                		<tr>
+                			<td><span class="gensmall">*{L_CONFIRM_CODE_EXPLAIN}</span></td>
+                		</tr>
+                		<tr>
+                			<td>{CONFIRM_IMG}</td>
+                		</tr>
+                		<tr>
+                			<td><span class="gensmall">{L_CONFIRM_CODE_IMPAIRED}</span></td>
+                		</tr>
+                     </table>
+
+                     </td>
+            </tr>
+<!-- END switch_confirm -->
+<tr>
+	<td class="catBottom" align="center">{S_HIDDEN_FIELDS}<input type="submit" name="submit" value="{L_SUBMIT}" class="liteoption"></td>
+</tr>
+</table>
+
+</form>
+
+<span class="corners-bottom"><span></span></span>
+</div>
+<!-- INCLUDE simple_footer.html -->

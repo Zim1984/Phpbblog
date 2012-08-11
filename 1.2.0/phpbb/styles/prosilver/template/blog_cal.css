@@ -1,0 +1,81 @@
+	#kalender{
+	width: 300px;
+	float: left;
+}
+#kalender a {
+	font-weight: bold;
+	text-decoration: none;
+	padding: 0px 1px;
+	text-align: center;
+	color: #000000;
+}
+#kalender a:hover {
+	font-weight: bold;
+	color: #CC0000;
+	text-decoration: none;
+	padding: 0px 1px;
+}
+.heute {
+	font-size: 12px;
+	font-weight: bold;
+	color: #000000;
+	text-decoration: none;
+	background-color: #FFB366;
+}
+.tage {
+	font-size: 12px;
+	font-weight: bold;
+	color: #000000;
+	text-decoration: none;
+	background-color: #FFFFFF;
+
+}
+.aktuell {
+	font-size: 12px;
+	font-weight: bold;
+	color: #000000;
+	text-decoration: none;
+	background-color: #FFFF00;
+
+}
+.feiertag {
+	font-size: 12px;
+	font-weight: bold;
+	color: #990000;
+	text-decoration: none;
+	background-color: #FFCC66;
+
+}
+.eintrag {
+	font-size: 12px;
+	font-weight: bold;
+	color: #990000;
+	text-decoration: none;
+	background-color: #D2D2D2;
+
+}
+.feiertageintrag {
+	font-size: 12px;
+	font-weight: bold;
+	color: #990000;
+	text-decoration: none;
+	background-color: #E2A283;
+
+}
+.kw {
+	font-size: 10px;
+	font-weight: normal;
+	color: #959595;
+	text-decoration: none;
+	background-color: #FFFFFF;
+}
+.tageklein {
+	font-size: 9px;
+	font-weight: bold;
+	color: #000000;
+	text-decoration: none;
+	background-color: #FFFFFF;
+	line-height: 25px;
+}
+
+

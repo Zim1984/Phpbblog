@@ -1,0 +1,160 @@
+<!-- INCLUDE overall_header.html -->
+<!-- IF BT_SETUP -->
+<h1>{L_BT_BUGTRACKER_ACP_SETUP}</h1>
+
+	<form id="forumedit" method="post" action="{U_EDIT_ACTION}">
+		<legend>{L_BT_GROUP_SELECT}</legend>
+		<table cellspacing="1" align="center">
+			<col class="row1" /><col class="row2" /><col class="row1" />
+			<tbody>
+			<tr>
+				<td width="33%">{L_BT_GROUP}:</td>
+				<td>
+					<select name="bugtracker_group">{BT_GROUP_DROP_DOWN}</select>
+				</td>
+				<td width="33%">
+					<input class="button2" type="submit" id="submit" value="{L_EXPORT_STORE}" name="post">
+				</td>
+			</tr>
+			</tbody>
+		</table>
+	</form>
+<!-- ENDIF -->
+<!-- IF BT_CAT_SELECT -->
+<h1>{L_BT_BUGTRACKER_ACP_CATSS}</h1>
+
+<p>{L_BT_CAT_SELECT}</p>
+<!-- IF BUG_CAT --><legend>{BUG_CAT}</legend><!-- ENDIF -->
+<!-- IF HAS_SUBCATS -->
+	<p><strong>{NAVIGATION}<!-- IF S_NO_FORUMS --> [<a href="{U_EDIT}">{L_EDIT}</a> | <a href="{U_DELETE}">{L_DELETE}</a><!-- IF not S_LINK --> | <a href="{U_SYNC}">{L_RESYNC}</a><!-- ENDIF --->]<!-- ENDIF --></strong></p>
+	<!-- IF .cats -->
+		<table cellspacing="1">
+			<col class="row1" /><col class="row1" /><col class="row2" />
+		<tbody>
+		<!-- BEGIN cats -->
+			<tr>
+				<td style="width: 5%; text-align: center;">{cats.FOLDER_IMAGE}</td>
+				<td>
+					<strong><a href="{cats.U_BUG_CAT}">{cats.BUG_CAT_NAME}</a></strong>
+					<!-- IF cats.BUG_CAT_DESC --><br /><span>{cats.BUG_CAT_DESC}</span><!-- ENDIF -->
+					<!-- IF cats.SUBCATS --><br /><br /><span>{L_BT_SUB_CATS}: {cats.SUBCATS}</span><!-- ENDIF -->
+				</td>
+				<td style="vertical-align: top; width: 100px; text-align: right; white-space: nowrap;">
+					<!-- IF cats.S_FIRST_ROW && not cats.S_LAST_ROW -->
+						{ICON_MOVE_UP_DISABLED}
+						<a href="{cats.U_MOVE_DOWN}">{ICON_MOVE_DOWN}</a>
+					<!-- ELSEIF not cats.S_FIRST_ROW && not cats.S_LAST_ROW-->
+						<a href="{cats.U_MOVE_UP}">{ICON_MOVE_UP}</a>
+						<a href="{cats.U_MOVE_DOWN}">{ICON_MOVE_DOWN}</a>
+					<!-- ELSEIF cats.S_LAST_ROW && not cats.S_FIRST_ROW -->
+						<a href="{cats.U_MOVE_UP}">{ICON_MOVE_UP}</a>
+						{ICON_MOVE_DOWN_DISABLED}
+					<!-- ELSE -->
+						{ICON_MOVE_UP_DISABLED}
+						{ICON_MOVE_DOWN_DISABLED}
+					<!-- ENDIF -->
+					<a href="{cats.U_EDIT}">{ICON_EDIT}</a>
+						{ICON_SYNC_DISABLED}
+					<a href="{cats.U_DELETE}">{ICON_DELETE}</a>
+				</td>
+			</tr>
+		<!-- END cats -->
+		</tbody>
+		</table>
+	<!-- ENDIF -->
+<!-- ELSE -->
+		<table cellspacing="1">
+			<col class="row1" /><col class="row1" /><col class="row2" />
+		<tbody>
+			<tr>
+				<td style="width: 5%; text-align: center;"></td>
+				<td>
+					<strong>{L_BT_NO_SUBCAT}</strong>
+				</td>
+				<td style="vertical-align: top; width: 100px; text-align: right; white-space: nowrap;">
+						{ICON_MOVE_UP_DISABLED}
+						{ICON_MOVE_DOWN_DISABLED}
+						{ICON_EDIT_DISABLED}
+						{ICON_SYNC_DISABLED}
+						{ICON_DELETE_DISABLED}
+				</td>
+			</tr>
+		</tbody>
+		</table>
+<!-- ENDIF -->
+<!-- ENDIF -->
+<!-- IF BT_CAT_NEW or BT_CAT_EDIT -->
+<!-- IF BT_CAT_NEW -->
+<h1>{L_BT_BUGTRACKER_ACP_CATSN}</h1>
+<p>{L_BT_CAT_NEW}</p>
+	<form id="forumedit" method="post" action="{U_EDIT_ACTION}">
+	<fieldset>
+		<legend>{L_BT_BUGTRACKER_ACP_CATSN}</legend>
+<!-- ELSE -->
+<h1>{L_BT_BUGTRACKER_ACP_CATSE}</h1>
+<p>{L_BT_CAT_EDIT}</p>
+	<form id="forumedit" method="post" action="{U_EDIT_ACTION}">
+	<fieldset>
+		<legend>{L_BT_BUGTRACKER_ACP_CATSE}</legend>
+<!-- ENDIF -->
+	<!-- IF ERROR_MSG -->
+		<div class="errorbox">
+			<h3>{L_WARNING}</h3>
+			<p>{ERROR_MSG}</p>
+		</div>
+	<!-- ENDIF -->
+
+	<dl>
+		<dt><label for="parent">{L_BT_NEW_CAT_PARENT}:</label></dt>
+		<dd><select id="parent" name="bug_parent_cat_id">{S_PARENT_OPTIONS}</select></dd>
+	</dl>
+	<dl>
+		<dt><label for="forum_name">{L_BT_NEW_CAT_NAME}:</label></dt>
+		<dd><input class="text medium" type="text" id="bug_cat_name" value="{BUG_CAT_NAME}" name="bug_cat_name" maxlength="255" /></dd>
+	</dl>
+	<dl>
+		<dt><label for="forum_desc">{L_BT_NEW_CAT_DESC}:</label><br /><span>{L_BT_NEW_CAT_DESC_EXPLAIN}</span></dt>
+		<dd><textarea id="forum_desc" name="lexikon_cat_desc" rows="5" cols="45">{BUG_CAT_DESC}</textarea></dd>
+	</dl>
+	</fieldset>
+	<fieldset class="submit-buttons">
+		<legend>{L_SUBMIT}</legend>
+		<input class="button1" type="submit" id="submit" name="post" value="{L_SUBMIT}" />&nbsp;
+	</fieldset>
+	</form>
+<!-- ENDIF -->
+<!-- IF BT_CAT_DELETE -->
+<h1>{L_BT_BUGTRACKER_ACP_CATSD}</h1>
+<p>{L_BT_CAT_DELETE}</p>
+	<form id="forumedit" method="post" action="{U_EDIT_ACTION}">
+	<fieldset>
+<!-- IF CAT_SUBS -->
+	<dl>
+		<dt><label for="parent">{L_BT_DEL_SUBS}:</label></dt>
+			<dd><label><input type="radio" class="radio" name="bug_move_subcats" value="0" checked="checked" /> {L_BT_DEL_SUBS_YES}</label><br />
+				<label><input type="radio" class="radio" name="bug_move_subcats" value="1" /> {L_BT_DEL_SUBS_TO}: </label>
+					<select id="parent" name="bug_move_subcats_to">{S_PARENT_OPTIONS}</select></dd>
+	</dl>
+<!-- ENDIF -->
+<!-- IF CAT_BUGS -->
+	<dl>
+		<dt><label for="parent">{L_BT_DEL_BUGS}:</label></dt>
+			<dd><label><input type="radio" class="radio" name="bug_move_bugs" value="0" checked="checked" /> {L_BT_DEL_BUGS_YES}</label><br />
+				<label><input type="radio" class="radio" name="bug_move_bugs" value="1" /> {L_BT_DEL_BUGS_TO}: </label>
+					<select id="parent" name="bug_move_bugs_to">{S_PARENT_OPTIONS}</select></dd>
+	</dl>
+<!-- ENDIF -->
+	<dl>
+		<dt><label for="parent">{L_BT_DEL_CAT}:</label></dt>
+			<dd><label><input type="radio" class="radio" name="bug_del_cat" value="1" /> {L_YES}</label>
+			<label><input type="radio" class="radio" name="bug_del_cat" value="0" checked="checked" /> {L_NO}</label></dd>
+	</dl>
+	</fieldset>
+	<fieldset class="submit-buttons">
+		<legend>{L_SUBMIT}</legend>
+		<input class="button1" type="submit" id="submit" name="post" value="{L_SUBMIT}" />&nbsp;
+	</fieldset>
+	</form>
+
+<!-- ENDIF -->
+<!-- INCLUDE overall_footer.html -->

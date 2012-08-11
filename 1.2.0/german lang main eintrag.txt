@@ -1,0 +1,11 @@
+//
+// Blog Start
+//
+
+$lang['Blog_title'] = 'Blog';
+$lang['Viewing_Blog'] = 'Betrachtet Den Blog';
+
+
+//
+// Blog End
+//

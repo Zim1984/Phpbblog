@@ -1,0 +1,628 @@
+<!-- INCLUDE overall_header.html -->
+<!-- INCLUDE blog_quickedit.html -->
+
+<!--
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+xmlns:dc="http://purl.org/dc/elements/1.1/"
+xmlns:trackback="http://madskills.com/public/xml/rss/module/trackback/">
+<rdf:Description
+rdf:about="http://www.foo.com/archive.html#foo"
+dc:identifier="http://www.foo.com/archive.html#foo"
+dc:title="Foo Bar"
+trackback:ping="http://www.foo.com/tb.cgi/5" />
+</rdf:RDF>
+-->
+
+<script type="text/javascript" src="{T_TEMPLATE_PATH}/blog.js" ></script>
+	<style type="text/css">
+	<!--
+		#archives{
+			float: left;
+			padding: 15px 15px;
+			text-align: center;
+		}
+		.archives_title {
+			font-weight: bold;
+			text-align: center;
+		}
+
+		.archive_sdmenu .archive_title, .archive_sdmenu .archive_titlehidden {
+			display: block;
+			padding: 5px 0;
+		}
+
+		.archive_sdmenu .archive_arrow {
+			margin-left: 1px;
+			margin-right: 3px;
+		}
+
+		.archive_sdmenu .archive_submenu {
+			overflow: hidden;
+		}
+
+		.blog-icon, .blog-icon a {
+			background: transparent none 0 0 no-repeat;
+			background-image: url("{ADD_BLOG_IMG}");
+		}
+
+		.buttons div.blog-icon {
+			width: 96px;
+			height: 25px;
+		}
+
+		.deleted {
+			background-color: #33FF00;
+		}
+
+		.foe {
+			background-color: #FF6600;
+		}
+#kalender{
+	float: left;
+}
+#kalender a {
+	font-weight: bold;
+	text-decoration: none;
+	padding: 0px 1px;
+	text-align: center;
+	color: #000000;
+}
+#kalender a:hover {
+	font-weight: bold;
+	color: #CC0000;
+	text-decoration: none;
+	padding: 0px 1px;
+}
+.heute {
+	font-size: 12px;
+	font-weight: bold;
+	color: #000000;
+	text-decoration: none;
+	background-color: #FFB366;
+}
+.tage {
+	font-size: 12px;
+	font-weight: bold;
+	color: #000000;
+	text-decoration: none;
+}
+.aktuell {
+	font-size: 12px;
+	font-weight: bold;
+	color: #000000;
+	text-decoration: none;
+	background-color: #FFFF00;
+}
+.feiertag {
+	font-size: 12px;
+	font-weight: bold;
+	color: #990000;
+	text-decoration: none;
+	background-color: #FFCC66;
+}
+.eintrag {
+	font-size: 12px;
+	font-weight: bold;
+	color: #990000;
+	text-decoration: none;
+	background-color: #D2D2D2;
+
+}
+.feiertageintrag {
+	font-size: 12px;
+	font-weight: bold;
+	color: #990000;
+	text-decoration: none;
+	background-color: #E2A283;
+}
+.kw {
+	font-size: 10px;
+	font-weight: normal;
+	color: #959595;
+	text-decoration: none;
+
+}
+.tageklein {
+	font-size: 9px;
+	font-weight: bold;
+	color: #000000;
+	text-decoration: none;
+	line-height: 25px;
+}
+	-->
+	</style>
+
+<script language="JavaScript">
+<!--
+
+// Startup variables
+
+var theSelection = false;
+
+// Check for Browser & Platform for PC & IE specific bits
+// More details from: http://www.mozilla.org/docs/web-developer/sniffer/browser_type.html
+var clientPC = navigator.userAgent.toLowerCase(); // Get client info
+var clientVer = parseInt(navigator.appVersion); // Get browser version
+
+var is_ie = ((clientPC.indexOf("msie") != -1) && (clientPC.indexOf("opera") == -1));
+var is_nav = ((clientPC.indexOf('mozilla')!=-1) && (clientPC.indexOf('spoofer')==-1)
+                && (clientPC.indexOf('compatible') == -1) && (clientPC.indexOf('opera')==-1)
+                && (clientPC.indexOf('webtv')==-1) && (clientPC.indexOf('hotjava')==-1));
+var is_moz = 0;
+
+var is_win = ((clientPC.indexOf("win")!=-1) || (clientPC.indexOf("16bit") != -1));
+var is_mac = (clientPC.indexOf("mac")!=-1);
+
+
+
+
+// Define the bbCode tags
+var bbcode = new Array();
+var bbtags = new Array('[b]','[/b]','[i]','[/i]','[u]','[/u]','[quote]','[/quote]','[code]','[/code]','[list]','[/list]','[list=]','[/list]','[img]','[/img]','[url]','[/url]','[flash=]', '[/flash]','[size=]','[/size]');
+var imageTag = false;
+
+
+	// Helpline messages
+	var help_line = {
+		b: '{LA_BBCODE_B_HELP}',
+		i: '{LA_BBCODE_I_HELP}',
+		u: '{LA_BBCODE_U_HELP}',
+		q: '{LA_BBCODE_Q_HELP}',
+		c: '{LA_BBCODE_C_HELP}',
+		l: '{LA_BBCODE_L_HELP}',
+		o: '{LA_BBCODE_O_HELP}',
+		p: '{LA_BBCODE_P_HELP}',
+		w: '{LA_BBCODE_W_HELP}',
+		a: '{LA_BBCODE_A_HELP}',
+		s: '{LA_BBCODE_S_HELP}',
+		f: '{LA_BBCODE_F_HELP}',
+		e: '{LA_BBCODE_E_HELP}',
+		d: '{LA_BBCODE_D_HELP}'
+	}
+
+function select_switch(status)
+	{
+		for (i = 0; i < document.msglist.length; i++)
+		{
+			document.msglist.elements[i].checked = status;
+		}
+	}
+
+
+// Replacement for arrayname.length property
+function getarraysize(thearray) {
+	for (i = 0; i < thearray.length; i++) {
+		if ((thearray[i] == "undefined") || (thearray[i] == "") || (thearray[i] == null))
+			return i;
+		}
+	return thearray.length;
+}
+
+// Replacement for arrayname.push(value) not implemented in IE until version 5.5
+// Appends element to the array
+function arraypush(thearray,value) {
+	thearray[ getarraysize(thearray) ] = value;
+}
+
+// Replacement for arrayname.pop() not implemented in IE until version 5.5
+// Removes and returns the last element of an array
+function arraypop(thearray) {
+	thearraysize = getarraysize(thearray);
+	retval = thearray[thearraysize - 1];
+	delete thearray[thearraysize - 1];
+	return retval;
+}
+
+	function openCom(str) {
+		window.open('blog_comments.php?id=' + str,'comments','scrollbars=yes,width=400,height=540,resizable=no,status=no,location=no,toolbar=no');
+	}
+
+	function bMod(str) {
+		document.location.href='blog.php?b={BLOG}&perform=edit&id=' + str;
+	}
+
+	function bDel(str) {
+		document.location.href='blog.php?b={BLOG}&perform=del&id=' + str;
+	}
+
+	function bMail(str) {
+		document.location.href='blog.php?b={BLOG}&perform=mail&id=' + str;
+	}
+
+function emoticon(text) {
+	var txtarea = document.post.text;
+	text = ' ' + text + ' ';
+	if (txtarea.createTextRange && txtarea.caretPos) {
+		var caretPos = txtarea.caretPos;
+		caretPos.text = caretPos.text.charAt(caretPos.text.length - 1) == ' ' ? caretPos.text + text + ' ' : caretPos.text + text;
+		txtarea.focus();
+	} else {
+		txtarea.value  += text;
+		txtarea.focus();
+	}
+}
+
+function bbstyle(bbnumber) {
+	var txtarea = document.post.text;
+
+	txtarea.focus();
+	donotinsert = false;
+	theSelection = false;
+	bblast = 0;
+
+	if (bbnumber == -1) { // Close all open tags & default button names
+		while (bbcode[0]) {
+			butnumber = arraypop(bbcode) - 1;
+			txtarea.value += bbtags[butnumber + 1];
+			buttext = eval('document.post.addbbcode' + butnumber + '.value');
+			eval('document.post.addbbcode' + butnumber + '.value ="' + buttext.substr(0,(buttext.length - 1)) + '"');
+		}
+		imageTag = false; // All tags are closed including image tags :D
+		txtarea.focus();
+		return;
+	}
+
+	if ((clientVer >= 4) && is_ie && is_win)
+	{
+		theSelection = document.selection.createRange().text; // Get text selection
+		if (theSelection) {
+			// Add tags around selection
+			document.selection.createRange().text = bbtags[bbnumber] + theSelection + bbtags[bbnumber+1];
+			txtarea.focus();
+			theSelection = '';
+			return;
+		}
+	}
+	else if (txtarea.selectionEnd && (txtarea.selectionEnd - txtarea.selectionStart > 0))
+	{
+		mozWrap(txtarea, bbtags[bbnumber], bbtags[bbnumber+1]);
+		return;
+	}
+
+	// Find last occurance of an open tag the same as the one just clicked
+	for (i = 0; i < bbcode.length; i++) {
+		if (bbcode[i] == bbnumber+1) {
+			bblast = i;
+			donotinsert = true;
+		}
+	}
+
+	if (donotinsert) {		// Close all open tags up to the one just clicked & default button names
+		while (bbcode[bblast]) {
+				butnumber = arraypop(bbcode) - 1;
+				txtarea.value += bbtags[butnumber + 1];
+				buttext = eval('document.post.addbbcode' + butnumber + '.value');
+				eval('document.post.addbbcode' + butnumber + '.value ="' + buttext.substr(0,(buttext.length - 1)) + '"');
+				imageTag = false;
+			}
+			txtarea.focus();
+			return;
+	} else { // Open tags
+
+		if (imageTag && (bbnumber != 14)) {		// Close image tag before adding another
+			txtarea.value += bbtags[15];
+			lastValue = arraypop(bbcode) - 1;	// Remove the close image tag from the list
+			document.post.addbbcode14.value = "Img";	// Return button back to normal state
+			imageTag = false;
+		}
+
+		// Open tag
+		txtarea.value += bbtags[bbnumber];
+		if ((bbnumber == 14) && (imageTag == false)) imageTag = 1; // Check to stop additional tags after an unclosed image tag
+		arraypush(bbcode,bbnumber+1);
+		eval('document.post.addbbcode'+bbnumber+'.value += "*"');
+		txtarea.focus();
+		return;
+	}
+	storeCaret(txtarea);
+}
+
+function bbfontstyle(bbopen, bbclose) {
+	var txtarea = document.post.text;
+
+	if ((clientVer >= 4) && is_ie && is_win) {
+		theSelection = document.selection.createRange().text;
+		if (!theSelection) {
+			txtarea.value += bbopen + bbclose;
+			txtarea.focus();
+			return;
+		}
+		document.selection.createRange().text = bbopen + theSelection + bbclose;
+		txtarea.focus();
+		return;
+	}
+	else if (txtarea.selectionEnd && (txtarea.selectionEnd - txtarea.selectionStart > 0))
+	{
+		mozWrap(txtarea, bbopen, bbclose);
+		return;
+	}
+	else
+	{
+		txtarea.value += bbopen + bbclose;
+		txtarea.focus();
+	}
+	storeCaret(txtarea);
+}
+
+
+/**
+ * Resize a textbox
+ * Original function by Disturbed One (http://www.hvmdesign.com/)
+ */
+function textbox_resize(pix)  
+{  
+	var box			= document.getElementById('text');
+	var new_height	= (parseInt(box.style.height) ? parseInt(box.style.height) : 300) + pix;
+	
+	if (new_height > 0)
+	{
+		box.style.height = new_height + 'px';
+	}
+	
+	return false;
+}
+
+// -->
+</script>
+
+
+
+<table width="100%"  cellpadding="1" cellspacing="1" border="0" class="forumline">
+<tr>
+  <td class="catHead" colspan="2" height="28" align="center"><span class="nav"><h2>{L_BLOG}</h2> &nbsp;</span></td>
+</tr>
+<tr>
+	<td width="20%" valign="top" align="right">
+
+
+
+<div id="left_row" class="navbar">
+<span class="corners-top"><span></span></span>
+
+
+				<!-- IF S_CALENDAR -->
+				<table cellspacing="1" cellpadding="1" border="0" class="kalendar" > 
+				<tr>
+					<td colspan="8" align="center" class="tage" align="top">
+					<a href="blog.php?b={L_LAST_MONTH}&ta=1"><img src="{T_THEME_PATH}/images/monatzurueck.gif" alt="einen Monat zur&uuml;ck" border="0"></a>&nbsp;&nbsp;
+					{L_THIS_MONTH}&nbsp;&nbsp;
+					<a href="blog.php?b={L_NEXT_MONTH}&ta=1"><img src="{T_THEME_PATH}/images/monatvor.gif" alt="einen Monat weiter" border="0"></a></td>
+				</tr>
+				<tr>
+ 					<td width="20" class="tage" align="center">Mo</td>
+ 					<td width="20" class="tage" align="center">Di</td>
+ 					<td width="20" class="tage" align="center">Mi</td>
+ 					<td width="20" class="tage" align="center">Do</td>
+ 					<td width="20" class="tage" align="center">Fr</td>
+ 					<td width="20" class="feiertag" align="center">Sa</td>
+ 					<td width="20" class="feiertag" align="center">So</td>
+  					<td width="20" class="kw" align="center">KW</td>
+  				</tr>
+				<tr>
+
+
+				{L_REST_CAL}
+				</tr>
+				<tr>
+					<td colspan="8" class="tageklein"><a href="blog.php?b={L_THIS_MY_URI}&ta={L_THIS_DAY}">Zum aktuellen Datum wechseln</a></td>
+				</tr>
+				</table>
+				<!-- ENDIF -->
+
+
+				<!-- IF S_ARCHIVES -->
+				<script type="text/javascript" src="{T_TEMPLATE_PATH}/blog.js" onload="init();"></script>
+				<!-- <div class="post bg1"> -->
+					<div class="inner">
+						
+						<dl>
+							<dt class="archives_title">{L_BLOG_ARCHIVES}</dt>
+							<dd>
+									<div class="archive_sdmenu">
+										<!-- BEGIN archiverow -->
+											<strong><span class="archive_title" id="archive_top"><img src="{T_THEME_PATH}/images/minus.gif" class="archive_arrow" alt="-" /> {archiverow.MONTH} {archiverow.YEAR}</span></strong>
+											<div class="archive_submenu">
+												<!-- BEGIN monthrow -->
+													<dl class="panel">
+														<dt><a href="{archiverow.monthrow.U_VIEW}">{archiverow.monthrow.TITLE}</a></dt>
+														<dd>&nbsp; &nbsp;{archiverow.monthrow.DATE}</dd>
+													</dl>
+												<!-- END monthrow -->
+											</div>
+											<br/>
+										<!-- END archiverow -->
+									</div>
+							</dd>
+						</dl>
+					</div>
+
+				<!-- ENDIF -->
+
+
+
+		<table cellpadding="15" cellspacing="15" border="0">
+			<tr>
+				<td align="left">
+					<span class="genmed"><b>{L_BLOG_ARCHIVES}</b><br />
+					<!-- BEGIN mounths_list -->
+					<a href="?b={mounths_list.MOUNTHS}">{mounths_list.MOUNTHS_NAME}</a><br />
+					<!-- END mounths_list -->
+					</span>
+				</td>
+			</tr>
+		</table>
+
+		<table cellpadding="15" cellspacing="15" border="0">
+			<tr>
+				<td align="left">
+					<span class="genmed"><b>{L_BLOG_CATEGORIES}</b><br />
+					<!-- BEGIN cats_list -->
+					<a href="?cats={cats_list.CATS}">{cats_list.CATS_NAME}</a><br />
+					<!-- END cats_list -->
+					</span>
+				</td>
+			</tr>
+		</table>
+
+
+<span class="corners-bottom"><span></span></span>
+</div>
+
+
+
+
+	</td>
+	<td width="80%" valign="top">
+
+	
+	
+		<div class="forabg">
+			<div class="inner"><span class="corners-top"><span></span></span>
+			<ul class="topiclist">
+				<li class="header">
+					<dl class="icon">
+						<dd class="lastpost">{L_BLOG}</dd>
+					</dl>
+				</li>
+			</ul>
+			<ul class="topiclist forums">
+		<!-- BEGIN blog -->
+		<li class="row" {blog.QUICK_ID}>
+			<ul>
+				<li>&nbsp;&nbsp;<b>{blog.DATE}</b></li>
+				<li>&nbsp;&nbsp;<b>{blog.TITEL}</b></li>
+				<li>{blog.TEXT}</li>
+				<li>
+					{blog.L_FROM}&nbsp;<b>{blog.USERNAME}:</b> {blog.TIME} | <a href="javascript:openCom('{blog.U_COMMENTS}')">{blog.L_COMMENTS}</a> {blog.U_ADMIN_COMMAND} | <a href="javascript:bMail('{blog.U_COMMENTS}')">{blog.L_SENDBLOG}</a>
+				</li>
+			</ul>
+		</li>
+		<!-- END blog -->
+				</ul>
+
+			<span class="corners-bottom"><span></span></span></div>
+		</div>
+
+		
+	</td>
+</tr>
+
+</table>
+
+<!-- BEGIN blog_admin -->
+
+
+
+<div id="quick_reply">
+	<form action="{blog_admin.U_FORM_ACTION}" enctype="multipart/form-data" method="post" id="confirm" name="post">
+		<div class="panel" id="postingbox">
+			<div class="inner"><span class="corners-top"><span></span></span>
+			
+			<h3>{blog_admin.L_ADD_BLOG}</h3>
+
+	
+			<fieldset class="fields1">
+			<dl style="clear: left;" id="message-box">
+        <dt><label for="username">{blog_admin.L_TITEL}:</label></dt>
+				<dd>
+					<input type="text" value="{blog_admin.TITEL}" name="titel"  title="{blog_admin.L_TITEL}" id="titel" size="95%" maxlength="255" tabindex="0" class="inputbox" accesskey="t" style="width:100%;" />
+				</dd>	
+				<dd>
+          <input type="button" class="button2" accesskey="b" name="addbbcode0" value=" B " style="font-weight:bold; width: 30px" onClick="bbstyle(0)" />&nbsp;
+          <input type="button" class="button2" accesskey="i" name="addbbcode2" value=" i " style="font-style:italic; width: 30px" onClick="bbstyle(2)" />&nbsp;
+          <input type="button" class="button2" accesskey="u" name="addbbcode4" value=" u " style="text-decoration: underline; width: 30px" onClick="bbstyle(4)" />&nbsp;
+          <input type="button" class="button2" accesskey="w" name="addbbcode16" value="URL" style="text-decoration: underline; width: 40px" onClick="bbstyle(16)" />&nbsp;
+          <input type="button" class="button2" accesskey="q" name="addbbcode6" value="Quote" style="width: 50px" onClick="bbstyle(6)" />&nbsp;
+          <input type="button" class="button2" accesskey="c" name="addbbcode8" value="Code" style="width: 40px" onClick="bbstyle(8)" />&nbsp;
+		      <input type="button" class="button2" accesskey="l" name="addbbcode10" value="List" style="width: 40px" onclick="bbstyle(10)" title="{L_BBCODE_L_HELP}" />
+		      <input type="button" class="button2" accesskey="o" name="addbbcode12" value="List=" style="width: 40px" onclick="bbstyle(12)" title="{L_BBCODE_O_HELP}" />
+		      <input type="button" class="button2" accesskey="t" name="addlitsitem" value="[*]" style="width: 40px" onclick="bbstyle(-1)" title="{L_BBCODE_LISTITEM_HELP}" />
+          <input type="button" class="button2" accesskey="p" name="addbbcode14" value="Img" style="width: 40px"  onClick="bbstyle(14)" />
+        </dd>
+
+				<dd><div><!-- INCLUDE posting_buttons.html --></div></dd>
+				<dd>
+		        <span class="genmed">
+            {blog_admin.L_PERMIT_COM}
+            <input type="radio" name="permit_com" value="1" {blog_admin.PERMIT_COM_YES} /> {blog_admin.L_YES}&nbsp;&nbsp;
+            <input type="radio" name="permit_com" value="0" {blog_admin.PERMIT_COM_NO} /> {blog_admin.L_NO}
+            </span>
+            <select name="category">{blog_admin.CAT_LIST}</select>
+				</dd>
+
+				<dd>
+					<textarea name="text" id="text" rows="20" cols="95" tabindex="2" class="inputbox" style="height:200px;">{blog_admin.TEXT}</textarea>
+				</dd>
+				<dd>
+					<input type="button" value=" + " class="button1" onclick="textbox_resize(100);" />
+					<input type="button" value=" - " class="button1" onclick="textbox_resize(-100);" />
+				</dd>
+			</dl>
+			</fieldset>
+				
+			<span class="corners-bottom"><span></span></span></div>
+		</div>
+
+		<div class="panel bg2">
+			<div class="inner"><span class="corners-top"><span></span></span>	
+			
+			<fieldset class="fields1">
+				<div class="column1">
+					<dl><dd>
+				<li>
+					<ul> 
+
+                 <li><td align="center" colspan="{S_SMILIES_COLSPAN}" class="gensmall">
+                 <b>{L_SMILIES}</b>
+                 </td></li>
+
+            	<!-- BEGIN smilies_row -->
+            	<li>
+            	<!-- BEGIN smilies_col -->
+            		<td align="center" valign="middle">
+                 <a href="javascript:emoticon('{blog_admin.smilies_row.smilies_col.SMILEY_CODE}')"><img src="{blog_admin.smilies_row.smilies_col.SMILEY_IMG}" border="0" alt="{blog_admin.smilies_row.smilies_col.SMILEY_CODE}" title="{blog_admin.smilies_row.smilies_col.SMILEY_DESC}" /></a>
+                </td>
+            	<!-- END smilies_col -->
+            	</li>
+            	<!-- END smilies_row -->
+
+                <li><td colspan="{S_SMILIES_COLSPAN}">
+                  <span class="nav"><a href="{U_ALL_SMILIES}" onclick="window.open('{U_ALL_SMILIES}', '_phpbbsmilies', 'HEIGHT=300,resizable=no,scrollbars=yes,WIDTH=250');return false;" target="_phpbbsmilies" class="nav">{L_MORE_SMILIES}</a></span>
+                </td></li>
+	
+					</ul>
+				</li></dd></dl>
+				</div>
+			</fieldset>
+		
+			<span class="corners-bottom"><span></span></span></div>
+		</div>
+		
+		<div class="panel bg2">
+			<div class="inner"><span class="corners-top"><span></span></span>	
+			
+      <fieldset class="submit-buttons">
+        {blog_admin.S_HIDDEN_FIELD}
+        <input type="submit" name="submit" tabindex="5" value="{blog_admin.L_SUBMIT}" class="button1" accesskey="s" /> 
+      </fieldset>
+			<span class="corners-bottom"><span></span></span></div>
+		</div>
+	</form>
+</div>
+<!-- END blog_admin -->
+
+
+
+	<div class="navbar">
+		<div class="inner"><span class="corners-top"><span></span></span>
+
+		<ul class="linklist leftside">
+		<li><span class="gensmall">{BLOG_CHECK_VERSION}</span> </li></ul>
+		<ul class="linklist rightside"><li> phpBBlog {BLOG_VERSION} Powered by {BLOG_AUTHOR} </li></ul>
+		
+
+		<span class="corners-bottom"><span></span></span></div>
+	</div>
+
+
+<!-- INCLUDE overall_footer.html -->

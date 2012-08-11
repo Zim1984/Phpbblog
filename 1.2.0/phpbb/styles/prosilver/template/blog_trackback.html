@@ -1,0 +1,89 @@
+<!-- INCLUDE simple_header.html -->
+
+<script language="JavaScript">
+<!--
+	self.focus();
+
+	self.focus();
+	self.opener.location.reload();
+
+	function textCounter( field, countfield, maxlimit ) {
+	  if ( field.value.length > maxlimit )
+	  {
+		field.value = field.value.substring( 0, maxlimit );
+		alert( 'Textarea value can only be 255 characters in length.' );
+		return false;
+	  }
+	  else
+	  {
+		countfield.value = maxlimit - field.value.length;
+	  }
+	}
+
+
+
+
+	function bDel(id,id_com) {
+		document.location.href='blog_comments.php?perform=del&id=' + id + '&id_com=' + id_com;
+	}
+
+// -->
+</script>
+
+
+<div id="left_row" class="navbar">
+<span class="corners-top"><span></span></span>
+
+
+<table width="100%" cellpadding="4" cellspacing="1" border="0" >
+<tr>
+	<th class="thHead">{L_COMMENTS}</th>
+</tr>
+<!-- BEGIN blog_comments -->
+<tr>
+	<td class="{blog_comments.ROW_CLASS}">
+		<span class="genmed">
+		<b>{blog_comments.USERNAME}: {blog_comments.TIME}, {blog_comments.DATE}</b> {blog_comments.U_ADMIN_COMMAND}<br />
+		{blog_comments.COMMENT}
+		</span>
+	</td>
+</tr>
+<!-- END blog_comments -->
+<tr>
+	<td height="1" class="spaceRow"><img src="../templates/subSilver/images/spacer.gif" alt="" width="1" height="1" /></td>
+</tr>
+</table>
+
+
+
+<form id="trackback-form" method="post"
+        action="{U_FORM_ACTION}">
+<fieldset id="trackback">
+<label for="trackback-uri">Trackback URI:</label>
+<input id="trackback-uri" name="trackback-uri" 
+        type="text" /><br />
+ 
+<label for="title">Post Title:</label>
+<input id="title" name="title" type="text" /><br />
+ 
+<label for="url">Post URL:</label>
+<input id="url" name="url" type="text" /><br />
+ 
+<label for="excerpt">Excerpt:</label>
+<input id="excerpt" name="excerpt" type="text" /><br />
+ 
+<label for="blog">Blog Name:</label>
+<input id="blog" name="blog_name" type="text" /><br />
+ 
+<label for="submit"></label>
+<input value="Send Trackback Ping{L_SUBMIT}" name="submit" 
+        id="submit" type="submit"  class="liteoption"/> </fieldset></form>
+
+<span class="corners-bottom"><span></span></span>
+</div>
+<!-- INCLUDE simple_footer.html -->
+
+
+
+
+        

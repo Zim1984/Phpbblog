@@ -1,0 +1,71 @@
+<!-- INCLUDE overall_header.html -->
+
+<h1>{BLOG_ACP_SETTINGS}</h1>
+<p>{BLOG_ACP_SETTINGS_EXPLAIN}</p>
+
+<form method="POST" action="{U_LEXICON_CONFIG_ACTION}">
+
+<table cellspacing="1" align="center">
+<col class="row1" /><col class="row2" />
+<tbody>
+<tr>
+	<td><b>{L_TITEL}</b><br />({L_TITEL_EXPLAIN})</td>
+	<td><input type="text" name="titel" maxlength="100" size="25" value="{TITEL}" /></td>
+</tr>
+<tr>
+	<td><b>{L_DESCRIPTION}</b><br />{L_DESCRIPTION_EXPLAIN}</td>
+	<td><input type="text" name="description" maxlength="255" size="60" value="{DESCRIPTION}" /></td>
+</tr>
+
+<tr>
+	<td><b>{BLOG_ACP_PERMID_MOD}</b><br />({BLOG_ACP_PERMID_MOD_EXPLAIN})</td>
+	<td><input type="radio" class="radio" name="permit_mod" value="1" <!-- IF CFG_PERMID_MOD -->checked="checked"<!-- ENDIF -->/> {L_YES} &nbsp; 
+	<input type="radio" class="radio" name="permit_mod" value="0" <!-- IF not CFG_PERMID_MOD -->checked="checked"<!-- ENDIF --> /> {L_NO}</td>
+</tr>
+<tr>
+	<td>{BLOG_ACP_BLOGGER_GROUP}<br />{BLOG_ACP_BLOGGER_GROUP_EXPLAIN}</td>
+	<td><input type="text" name="blogger_group" size="20" maxlength="20" value="{BLOGGER_GROUP}" /></td>
+</tr>
+<tr>
+	<td>{BLOG_ACP_BLOGGER_USER}<br />{BLOG_ACP_BLOGGER_USER_EXPLAIN}</td>
+	<td><input type="text" name="blogger_user" size="20" maxlength="20" value="{BLOGGER_USER}" /></td>
+</tr>
+<tr>
+	<td><b>{BLOG_ACP_ONENTRY_SENDMAIL}</b><br />({BLOG_ACP_ONENTRY_SENDMAIL_EXPLAIN})</td>
+	<td><input type="radio" class="radio" name="onentry_sendmail" value="1" <!-- IF CFG_ONENTRY_SENDMAIL -->checked="checked"<!-- ENDIF -->/> {L_YES} &nbsp; 
+	<input type="radio" class="radio" name="onentry_sendmail" value="0" <!-- IF not CFG_ONENTRY_SENDMAIL -->checked="checked"<!-- ENDIF --> /> {L_NO}</td>
+</tr>
+<tr>
+	<td><b>{BLOG_ACP_ALLOW_GUEST_COM}</b><br />({BLOG_ACP_ALLOW_GUEST_COM_EXPLAIN})</td>
+	<td><input type="radio" class="radio" name="allow_guest_com" value="1" <!-- IF CFG_ALLOW_GUEST_COM -->checked="checked"<!-- ENDIF -->/> {L_YES} &nbsp; 
+	<input type="radio" class="radio" name="allow_guest_com" value="0" <!-- IF not CFG_ALLOW_GUEST_COM -->checked="checked"<!-- ENDIF --> /> {L_NO}</td>
+</tr>
+<tr>
+	<td><b>{BLOG_ACP_GUEST_COM_CAPTCHA}</b><br />({BLOG_ACP_GUEST_COM_CAPTCHA_EXPLAIN})</td>
+	<td><input type="radio" class="radio" name="guest_com_captcha" value="1" <!-- IF CFG_GUEST_COM_CAPTCHA -->checked="checked"<!-- ENDIF -->/> {L_YES} &nbsp; 
+	<input type="radio" class="radio" name="guest_com_captcha" value="0" <!-- IF not CFG_GUEST_COM_CAPTCHA -->checked="checked"<!-- ENDIF --> /> {L_NO}</td>
+</tr>
+<tr>
+	<td><b>{BLOG_ACP_ALLOW_CATS}</b><br />({BLOG_ACP_ALLOW_CATS_EXPLAIN})</td>
+	<td><input type="radio" class="radio" name="allow_cat" value="1" <!-- IF CFG_ALLOW_CATS -->checked="checked"<!-- ENDIF -->/> {L_YES} &nbsp; 
+	<input type="radio" class="radio" name="allow_cat" value="0" <!-- IF not CFG_ALLOW_CATS -->checked="checked"<!-- ENDIF --> /> {L_NO}</td>
+</tr>
+<tr>
+	<td><b>{BLOG_ACP_NEW_ARCHIV_MENU}</b><br />({BLOG_ACP_NEW_ARCHIV_MENU_EXPLAIN})</td>
+	<td><input type="radio" class="radio" name="new_archiv_menu" value="1" <!-- IF CFG_NEW_ARCHIV_MENU -->checked="checked"<!-- ENDIF -->/> {L_YES} &nbsp; 
+	<input type="radio" class="radio" name="new_archiv_menu" value="0" <!-- IF not CFG_NEW_ARCHIV_MENU -->checked="checked"<!-- ENDIF --> /> {L_NO}</td>
+</tr>
+<tr>
+	<td><b>{BLOG_ACP_CAL_ARCHIV_MENU}</b><br />({BLOG_ACP_CAL_ARCHIV_MENU_EXPLAIN})</td>
+	<td><input type="radio" class="radio" name="cal_archiv_menu" value="1" <!-- IF CFG_CAL_ARCHIV_MENU -->checked="checked"<!-- ENDIF -->/> {L_YES} &nbsp; 
+	<input type="radio" class="radio" name="cal_archiv_menu" value="0" <!-- IF not CFG_CAL_ARCHIV_MENU -->checked="checked"<!-- ENDIF --> /> {L_NO}</td>
+</tr>
+<tr>
+	<td>{L_VERSION}</td>
+	<td><input type="text" name="version" size="15" maxlength="15" value="{VERSION}" /></td>
+</tr>
+</tbody>
+</table>
+<p align="center">{S_HIDDEN_FIELDS}<input class="button2" type="submit" value="{L_SUBMIT}" name="submit" />&nbsp;&nbsp;<input class="button2" type="reset" value="{L_RESET}" /></p>
+</form>
+<!-- INCLUDE overall_footer.html -->

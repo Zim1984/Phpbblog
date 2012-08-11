@@ -1,0 +1,365 @@
+﻿############################################################## 
+## MOD Title: phpBBlog
+## MOD Author: Sko22 < sko22@quellicheilpc.it > (N/A) http://www.quellicheilpc.it/
+## MOD Description: Allows the creation of a Blog inside phpBB for personal sites.
+## MOD Version: 1.2.0
+## 
+## Installation Level: Easy 
+## Installation Time: 10 Minutes
+## Files To Edit: 
+##		viewonline.php
+##		includes/constants.php
+##		includes/page_header.php
+##		admin/index.php	
+##		language/lang_english/lang_main.php	
+##		templates/subSilver/overall_header.tpl	
+## Included Files: 
+##		blog.php
+##		blog_comments.php
+##              admin/admin_blog.php
+##              includes/blog_class.php
+##              language/lang_english/lang_blog.php
+##		templates/subSilver/blog_body.tpl
+##		templates/subSilver/blog_comments_body.tpl
+##              templates/subSilver/blog_sendblog_body.tpl
+##              templates/subSilver/admin/blog_config_body.tpl
+##		templates/subSilver/images/icon_mini_blog.gif
+############################################################## 
+## For Security Purposes, Please Check: http://www.phpbb.com/mods/ for the 
+## latest version of this MOD. Downloading this MOD from other sites could cause malicious code 
+## to enter into your phpBB Forum. As such, phpBB will not offer support for MOD's not offered 
+## in our MOD-Database, located at: http://www.phpbb.com/mods/ 
+############################################################## 
+## Author Notes:  phpBBlog allows to an Administrators to have a Blog inside phpBB and to directly
+## manage it in the page. It is also possible to eliminate the comments added by the Users.
+## The menu of the archives of the Blog is automatically generated
+## and it is advisable not to add more than an event a day.
+##
+## Attention!! Only admins can add a event in the Blog, login first.
+##
+## I have tested this MOD whit phpBB 2.0.6/7 and MySQL
+##
+## Future versions can be found at http://www.quellicheilpc.it
+## I've set up a support forum for my mods at http://www.quellicheilpc.it/forum/viewtopic.php?t=10612
+##
+## This MOD is released under the GPL License. 
+## Intellectual Property is retained by the MOD Author(s) listed above 
+## Copyright:      �2004 phpBBlog 1.0.1 - Sko22
+############################################################## 
+## MOD History: 
+## 
+##   2006-08-29 - Version 1.0.9
+##      -
+##      -
+##      -
+##      -
+##      -
+##
+##   2004-03-24 - Version 1.0.1
+##	- Changed the field name "comment" to "com" (in phpbb_blog_com table ) to preserve a bug
+##	in creation of this with phpMyAdmin (Thanks to Paky)
+##	- Added the name of the administrator that add the event in the blog (Thanks to DarkPepe)
+##   2004-03-19 - Version 1.0.0
+##	- Initial Release
+############################################################## 
+## Before Adding This MOD To Your Forum, You Should Back Up All Files Related To This MOD 
+##############################################################  
+
+# 
+#-----[ SQL ]------------------------------------------ 
+# 
+#   If you don't know how to execute sql queries, then copy
+#   mysql_install.php into your phpbb directory and run it.
+#   (assuming you use mysql)
+#   After process delete it.
+#
+#   If you don't use mysql, you'll have to edit these queries accordingly
+# 
+#   If you have a different table prefix then change this command accordingly. 
+#   I have used the default table prefix! 
+# 
+
+CREATE TABLE phpbb_blog (
+  id mediumint(8) UNSIGNED NOT NULL auto_increment,
+  user_id mediumint(8) NOT NULL default '0',
+  date int(11) NOT NULL default '0',
+  titel varchar(255) NOT NULL default '',
+  text mediumtext NOT NULL,
+  bbcode_uid varchar(8) NOT NULL,
+  bbcode_bitfield varchar(255) NOT NULL,
+  flags int(2) unsigned NOT NULL,
+  permit_com int(1) NOT NULL default '1',
+  category_id int(8) NOT NULL default '0',
+  blog_read_count int(6) NOT NULL default '0',
+  PRIMARY KEY  (id),
+  KEY category_id (category_id)
+) CHARACTER SET `utf8` COLLATE `utf8_bin`;
+
+
+
+CREATE TABLE phpbb_blog_com (
+  id mediumint(8) NOT NULL auto_increment,
+  id_blog tinyint(5) NOT NULL default '0',
+  user_id mediumint(8) NOT NULL default '0',
+  user_name varchar(25) NOT NULL default '',
+  user_email varchar(255) default NULL,
+  protect_email smallint(1) NOT NULL default '0',
+  email_advice smallint(1) NOT NULL default '0',
+  com varchar(255) NOT NULL default '',
+  date int(11) NOT NULL default '0',
+  PRIMARY KEY  (id)
+) CHARACTER SET `utf8` COLLATE `utf8_bin`;
+
+
+
+CREATE TABLE phpbb_blog_cat (
+  cat_id int(8) NOT NULL auto_increment,
+  cat_titel varchar(255) NOT NULL default '',
+  cat_desc mediumtext NOT NULL,
+  PRIMARY KEY  (cat_id)
+) CHARACTER SET `utf8` COLLATE `utf8_bin`;
+
+CREATE TABLE phpbb_blog_config (
+  config_name varchar(255) NOT NULL default '',
+  config_value varchar(255) NOT NULL default '',
+  PRIMARY KEY  (config_name)
+) CHARACTER SET `utf8` COLLATE `utf8_bin`;
+
+CREATE TABLE phpbb_blog_confirm (
+  confirm_id char(32) NOT NULL default '',
+  session_id char(32) NOT NULL default '',
+  code char(6) NOT NULL default '',
+  PRIMARY KEY  (session_id,confirm_id)
+) CHARACTER SET `utf8` COLLATE `utf8_bin`;
+
+
+INSERT INTO phpbb_blog_config VALUES ('smilies_column', '6');
+INSERT INTO phpbb_blog_config VALUES ('smilies_row', '3');
+INSERT INTO phpbb_blog_config VALUES ('permit_mod', '0');
+INSERT INTO phpbb_blog_config VALUES ('onentry_sendmail', '0');
+INSERT INTO phpbb_blog_config VALUES ('category_id', '1');
+INSERT INTO phpbb_blog_config VALUES ('version', '1.2.0');
+INSERT INTO phpbb_blog_config VALUES ('allow_guest_com', '1');
+INSERT INTO phpbb_blog_config VALUES ('guest_com_captcha', '1');
+INSERT INTO phpbb_blog_config VALUES ('allow_cat', '1');
+INSERT INTO phpbb_blog_config VALUES ('new_archiv_menu', '1');
+INSERT INTO phpbb_blog_config VALUES ('cal_archiv_menu', '1');
+INSERT INTO phpbb_blog_config VALUES ('blog_wordcloud', '1');
+INSERT INTO phpbb_blog_config VALUES ('blog_online', '1');
+INSERT INTO phpbb_blog_config VALUES ('blogger_group', '');
+INSERT INTO phpbb_blog_config VALUES ('blogger_user', '');
+
+
+INSERT INTO phpbb_blog_cat VALUES (1, 'default', 'Standard Kategorie');
+INSERT INTO phpbb_blog_cat VALUES (2, 'news', 'Neuigkeiten');
+INSERT INTO phpbb_blog_cat VALUES (3, 'private', 'Über Skippy Urlaub usw');
+INSERT INTO phpbb_blog_cat VALUES (4, 'around the board', 'Rund um die Seite galvano-atelier');
+
+# 
+#-----[ COPY ]------------------------------------------ 
+# 
+
+
+
+copy blog.php to blog.php
+copy blog_comments.php to blog_comments.php 
+copy admin/admin_blog.php to admin/admin_blog.php
+copy includes/blog_class.php to includes/blog_class.php
+copy language/lang_english/lang_blog.php to language/lang_english/lang_blog.php
+copy templates/subSilver/blog_body.tpl to templates/subSilver/blog_body.tpl
+copy templates/subSilver/blog_comments_body.tpl to templates/subSilver/blog_comments_body.tpl
+copy templates/subSilver/blog_sendblog_body.tpl to templates/subSilver/blog_sendblog_body.tpl
+copy templates/subSilver/admin/blog_config_body.tpl to templates/subSilver/admin/blog_config_body.tpl
+copy templates/subSilver/images/icon_mini_blog.gif to templates/subSilver/images/icon_mini_blog.gif
+
+# 
+#-----[ OPEN ]------------------------------------------ 
+# 
+
+viewonline.php
+
+# 
+#-----[ FIND ]------------------------------------------ 
+# 
+
+				case PAGE_FAQ:
+					$location = $lang['Viewing_FAQ'];
+					$location_url = "faq.$phpEx";
+					break;
+
+# 
+#-----[ AFTER, ADD ]------------------------------------------ 
+# 
+
+
+				case PAGE_BLOG:
+					$location = $lang['Viewing_Blog'];
+					$location_url = "blog.$phpEx";
+					break;
+
+# 
+#-----[ OPEN ]------------------------------------------ 
+# 
+
+includes/constants.php
+
+# 
+#-----[ FIND ]------------------------------------------ 
+# 
+
+define('PAGE_TOPIC_OFFSET', 5000);
+
+# 
+#-----[ BEFORE, ADD ]------------------------------------------ 
+#
+#   Check the page number, in this case I have used -23
+
+define('PAGE_BLOG', -23);
+
+# 
+#-----[ FIND ]------------------------------------------ 
+# 
+
+?>
+
+# 
+#-----[ BEFORE, ADD ]------------------------------------------ 
+#
+
+define('BLOG_TABLE', $table_prefix.'blog');
+define('BLOG_COM_TABLE', $table_prefix.'blog_com');
+define('BLOG_CAT_TABLE', $table_prefix.'blog_com');
+define('BLOG_CONFIG_TABLE', $table_prefix.'blog_config');
+
+# 
+#-----[ OPEN ]------------------------------------------ 
+# 
+
+includes/page_header.php
+
+# 
+#-----[ FIND ]------------------------------------------ 
+#
+
+	'L_FAQ' => $lang['FAQ'],
+
+# 
+#-----[ AFTER, ADD ]------------------------------------------ 
+#
+
+	'L_BLOG' => $lang['Blog_title'],
+
+# 
+#-----[ FIND ]------------------------------------------ 
+#
+
+	'U_FAQ' => append_sid('faq.'.$phpEx),
+
+# 
+#-----[ AFTER, ADD ]------------------------------------------ 
+#
+
+	'U_BLOG' => append_sid('blog.'.$phpEx),
+
+# 
+#-----[ OPEN ]------------------------------------------ 
+# 
+
+admin/index.php
+
+# 
+#-----[ FIND ]------------------------------------------ 
+# 
+#   around line 429
+
+						case PAGE_FAQ:
+							$location = $lang['Viewing_FAQ'];
+							$location_url = "index.$phpEx?pane=right";
+							break;
+
+# 
+#-----[ AFTER, ADD ]------------------------------------------ 
+# 
+
+						case PAGE_BLOG:
+							$location = $lang['Viewing_Blog'];
+							$location_url = "index.$phpEx?pane=right";
+							break;
+
+# 
+#-----[ FIND ]------------------------------------------ 
+# 
+#   around line 525
+
+					case PAGE_FAQ:
+						$location = $lang['Viewing_FAQ'];
+						$location_url = "index.$phpEx?pane=right";
+						break;
+
+# 
+#-----[ AFTER, ADD ]------------------------------------------ 
+#
+
+					case PAGE_BLOG:
+						$location = $lang['Viewing_Blog'];
+						$location_url = "index.$phpEx?pane=right";
+						break;
+
+# 
+#-----[ OPEN ]------------------------------------------ 
+#
+
+language/lang_english/lang_main.php
+
+# 
+#-----[ FIND ]------------------------------------------ 
+# 
+
+//
+// That's all, Folks!
+// -------------------------------------------------
+
+# 
+#-----[ BEFORE, ADD ]------------------------------------------ 
+#
+
+//
+// Blog Start
+//
+
+$lang['Blog_title'] = 'Blog';
+$lang['Blog_Com_title'] = 'Blog Comments';
+$lang['Viewing_Blog'] = 'Viewing the Blog';
+
+//
+// Blog End
+//
+
+# 
+#-----[ OPEN ]------------------------------------------ 
+#
+
+templates/subSilver/overall_header.tpl
+
+# 
+#-----[ FIND ]------------------------------------------ 
+# 
+
+						<td align="center" valign="top" nowrap="nowrap"><span class="mainmenu">&nbsp;<a href="{U_FAQ}" class="mainmenu"><img src="templates/subSilver/images/icon_mini_faq.gif" width="12" height="13" border="0" alt="{L_FAQ}" hspace="3" />{L_FAQ}</a></span><span class="mainmenu">&nbsp; &nbsp;<a href="{U_SEARCH}" class="mainmenu"><img src="templates/subSilver/images/icon_mini_search.gif" width="12" height="13" border="0" alt="{L_SEARCH}" hspace="3" />{L_SEARCH}</a>&nbsp; &nbsp;<a href="{U_MEMBERLIST}" class="mainmenu"><img src="templates/subSilver/images/icon_mini_members.gif" width="12" height="13" border="0" alt="{L_MEMBERLIST}" hspace="3" />{L_MEMBERLIST}</a>&nbsp; &nbsp;<a href="{U_GROUP_CP}" class="mainmenu"><img src="templates/subSilver/images/icon_mini_groups.gif" width="12" height="13" border="0" alt="{L_USERGROUPS}" hspace="3" />{L_USERGROUPS}</a>&nbsp;
+
+#
+#-----[ IN-LINE FIND ]------------------------------------------
+#
+
+						<td align="center" valign="top" nowrap="nowrap">
+
+#
+#-----[ IN-LINE AFTER, ADD ]------------------------------------------
+#
+
+<span class="mainmenu">&nbsp;<a href="{U_BLOG}" class="mainmenu"><img src="templates/subSilver/images/icon_mini_blog.gif" width="12" height="13" border="0" alt="blog" hspace="3" />{L_BLOG}</a></span>
+
+# 
+#-----[ SAVE/CLOSE ALL FILES ]------------------------------------------ 
+# 
+# EoM 
